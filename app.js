@@ -13,7 +13,7 @@ const methodOverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError");
 const session = require("express-session");
-const MongoStore = require('connect-mongo');
+const { MongoStore } = require("connect-mongo");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
@@ -51,19 +51,19 @@ app.use(express.static(path.join(__dirname, "public")));
 const store = MongoStore.create({
     mongoUrl: dburl,
     crypto: {
-        secret: "process.env.SECRET"
+        secret: process.env.SECRET
     },
     touchAfter: 24 * 3600,
 });
 
-store.on("error", () => {
+store.on("error", (err) => {
     console.log("Error in MONGO SESSION STORE", err);
 });
 
 
 const sessionOptions = {
     store,
-    secret: "process.env.SECRET",
+    secret: process.env.SECRET,
     resave: false,
     saveUninitialized: true,
     cookie: {
@@ -128,7 +128,8 @@ app.use((err, req, res, next) => {
 })
 
 
+const port = process.env.PORT || 8080;
 
-app.listen(8080, () => {
-    console.log("server is listening to port 8080");
-});
+app.listen(port, () => {
+    console.log(`server is listening to port ${port}`);
+}); 
