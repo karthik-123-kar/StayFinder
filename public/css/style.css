@@ -81,7 +81,7 @@ body {
 }
 
 .card-body {
-    padding: 400 !important;
+    padding: 0 !important;
     margin-top: 0.8rem;
 }
 

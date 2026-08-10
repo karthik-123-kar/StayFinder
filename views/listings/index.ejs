@@ -151,7 +151,7 @@
                             </b>
                             <br>
                             &#8377; <%= listing.price.toLocaleString("en-IN") %> / night
-                                <li class="tax-info"> &nbsp; &nbsp;+18% GST</li>
+                                <span class="tax-info">&nbsp;&nbsp;+18% GST</span>
                         </p>
                     </div>
                 </div>
@@ -166,7 +166,7 @@
         let taxSwitch = document.getElementById("flexSwitchCheckDefault");
         taxSwitch.addEventListener("click", () => {
             let taxInfo = document.getElementsByClassName("tax-info");
-            for (info of taxInfo) {
+            for (let info of taxInfo) {
                 if (info.style.display != "inline") {
                     info.style.display = "inline";
                 } else {
