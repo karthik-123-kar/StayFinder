@@ -32,7 +32,16 @@ async function getCoordinates(location, country) {
 //stop here  
 
 module.exports.index = async (req, res) => {
-    const allListings = await Listing.find({});
+    const { category } = req.query;
+
+    let filter = {};
+
+    if (category) {
+        filter.category = category;
+    }
+
+    const allListings = await Listing.find(filter);
+
     res.render("listings/index.ejs", { allListings });
 };
 
@@ -113,7 +122,7 @@ module.exports.updateListing = async (req, res) => {
     let listing = await Listing.findByIdAndUpdate(
         id,
         { ...req.body.listing },
-        { new: true }
+        { new: true, runValidators: true }
     );
 
     // Get coordinates for edited location
@@ -161,4 +170,3 @@ module.exports.destroyListing = async (req, res) => {
     req.flash("success", "Listing Deleted!");
     res.redirect("/listings");
 }
-
