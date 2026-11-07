@@ -34,6 +34,8 @@ async function getCoordinates(location, country) {
 module.exports.index = async (req, res) => {
     const { category } = req.query;
 
+    console.log("Selected Category:", category);
+
     let filter = {};
 
     if (category) {
@@ -41,6 +43,8 @@ module.exports.index = async (req, res) => {
     }
 
     const allListings = await Listing.find(filter);
+
+    console.log("Listings Found:", allListings.length);
 
     res.render("listings/index.ejs", { allListings });
 };
