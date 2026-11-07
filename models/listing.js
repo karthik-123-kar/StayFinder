@@ -19,6 +19,23 @@ const listingSchema = new Schema({
     location: String,
     country: String,
 
+    // Listing Category
+    category: {
+        type: String,
+        enum: [
+            "Rooms",
+            "Castles",
+            "Amazing Pools",
+            "Camping",
+            "Farms",
+            "Arctic",
+            "Domes",
+            "Boats",
+            "Iconic Cities",
+            "Mountains"
+        ]
+    },
+
     geometry: {
         type: {
             type: String,

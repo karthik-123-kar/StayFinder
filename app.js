@@ -1,6 +1,10 @@
-if (process.env.NODE_ENV != "production") {
-    require('dotenv').config();
+if (process.env.NODE_ENV !== "production") {
+    require("dotenv").config();
 }
+
+// MongoDB DNS workaround
+const dns = require("dns");
+dns.setServers(["8.8.8.8"]);
 
 const express = require("express");  /*Imports the Express.js framework.*/
 const app = express();               /*Creates your Express application/server. */
@@ -30,13 +34,18 @@ const dburl = process.env.ATLASDB_URL;
 /*test           → Database name */
 /*Connect to the test database running on my computer. */
 
+
 main().then(() => {                    /*Calls the main function */  //Because main() is an async function, it returns a Promise.
     console.log("conncected to DB");  //If MongoDB connects successfully:
 }).catch(err => {                     //If MongoDB connection fails, it prints the error.        
     console.log(err);
 })
-async function main() {              /*Creates an asynchronous function named main.*/  //async allows you to use await.
-    await mongoose.connect(dburl) /*Connect to MongoDB using MONGO_URL and wait until the connection process completes.*/
+async function main() {
+    await mongoose.connect(dburl);
+
+    console.log("MongoDB Connected Successfully!");
+    console.log("Database:", mongoose.connection.name);
+    console.log("Host:", mongoose.connection.host);
 }
 
 app.set("view engine", "ejs");

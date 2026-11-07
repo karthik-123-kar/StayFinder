@@ -34,12 +34,34 @@
                         <input name="listing[country]" value="India" type="text" class="form-control" required>
                     </div>
                 </div>
-
                 <div class="mb-3">
                     <label for="location" class="form-label">Location</label>
-                    <input name="listing[location]" placeholder="Jaipur, Rajasthan" type="text" class="form-control"
+                    <input name="listing[location]" type="text" class="form-control" placeholder="Enter location"
                         required>
+                    <div class="invalid-feedback">
+                        Location should be valid
+                    </div>
                 </div>
+
+
+                <div class="mb-3">
+                    <label for="category" class="form-label">Property Category</label>
+
+                    <select name="listing[category]" id="category" class="form-select" required>
+                        <option value="" selected disabled>Select a category</option>
+                        <option value="Rooms">Rooms</option>
+                        <option value="Castles">Castles</option>
+                        <option value="Amazing Pools">Amazing Pools</option>
+                        <option value="Camping">Camping</option>
+                        <option value="Farms">Farms</option>
+                        <option value="Arctic">Arctic</option>
+                        <option value="Domes">Domes</option>
+                        <option value="Boats">Boats</option>
+                        <option value="Iconic Cities">Iconic Cities</option>
+                        <option value="Mountains">Mountains</option>
+                    </select>
+                </div>
+
 
                 <button class="btn btn-danger mt-3">Add</button>
             </form>
