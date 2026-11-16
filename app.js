@@ -127,6 +127,12 @@ app.get("/", (req, res) => {
     res.redirect("/listings");
 });
 
+// ========================== TRIP EXPENSE TRACKER ==========================
+
+app.get("/expenses", (req, res) => {
+    res.render("expenses.ejs");
+});
+
 // ==========================404 ROUTE=============
 
 app.all("*", (req, res, next) => {
