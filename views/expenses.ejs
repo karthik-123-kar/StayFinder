@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trip Expense Tracker | StayFinder</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+        }
+        .container { max-width: 850px; margin: 40px auto; padding: 20px; }
+        .tracker {
+            background: #fff;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 4px 18px rgba(0,0,0,.08);
+        }
+        h1 { margin-top: 0; color: #1d3557; }
+        .subtitle { color: #666; margin-bottom: 24px; }
+        form { display: grid; grid-template-columns: 2fr 1fr 1fr auto; gap: 10px; }
+        input, select, button {
+            padding: 12px;
+            border: 1px solid #ccd2d8;
+            border-radius: 6px;
+            font-size: 15px;
+        }
+        button {
+            border: 0;
+            background: #1d6f5f;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover { background: #155748; }
+        .total {
+            margin: 24px 0;
+            padding: 18px;
+            background: #e8f4f0;
+            border-radius: 8px;
+        }
+        .total span { color: #1d6f5f; font-size: 26px; font-weight: bold; }
+        ul { list-style: none; padding: 0; }
+        li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .expense-info small { display: block; color: #777; margin-top: 4px; }
+        .remove { background: #c0392b; padding: 8px 12px; }
+        .empty { color: #777; text-align: center; padding: 20px; }
+        @media (max-width: 650px) {
+            .container { margin: 10px auto; padding: 10px; }
+            .tracker { padding: 18px; }
+            form { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <main class="container">
+        <section class="tracker">
+            <h1>Trip Expense Tracker</h1>
+            <p class="subtitle">Keep track of your travel spending in one place.</p>
+
+            <form id="expenseForm">
+                <input id="description" type="text" placeholder="Expense description" required>
+                <input id="amount" type="number" placeholder="Amount (₹)" min="1" step="0.01" required>
+                <select id="category">
+                    <option value="Food">Food</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Stay">Stay</option>
+                    <option value="Shopping">Shopping</option>
+                    <option value="Other">Other</option>
+                </select>
+                <button type="submit">Add Expense</button>
+            </form>
+
+            <div class="total">
+                <div>Total Trip Expenses</div>
+                <span id="totalAmount">₹0.00</span>
+            </div>
+
+            <h2>Expense History</h2>
+            <ul id="expenseList"></ul>
+            <p id="emptyMessage" class="empty">No expenses added yet.</p>
+        </section>
+    </main>
+
+    <script>
+        const form = document.getElementById("expenseForm");
+        const descriptionInput = document.getElementById("description");
+        const amountInput = document.getElementById("amount");
+        const categoryInput = document.getElementById("category");
+        const expenseList = document.getElementById("expenseList");
+        const totalAmount = document.getElementById("totalAmount");
+        const emptyMessage = document.getElementById("emptyMessage");
+
+        let expenses = JSON.parse(localStorage.getItem("stayfinder-expenses") || "[]");
+
+        function saveExpenses() {
+            localStorage.setItem("stayfinder-expenses", JSON.stringify(expenses));
+        }
+
+        function displayExpenses() {
+            expenseList.innerHTML = "";
+            let total = 0;
+
+            expenses.forEach((expense, index) => {
+                total += expense.amount;
+
+                const item = document.createElement("li");
+                const info = document.createElement("div");
+                info.className = "expense-info";
+
+                const name = document.createElement("strong");
+                name.textContent = expense.description;
+
+                const details = document.createElement("small");
+                details.textContent = expense.category;
+
+                const price = document.createElement("strong");
+                price.textContent = "₹" + expense.amount.toFixed(2);
+
+                const removeButton = document.createElement("button");
+                removeButton.textContent = "Remove";
+                removeButton.className = "remove";
+                removeButton.type = "button";
+                removeButton.addEventListener("click", () => {
+                    expenses.splice(index, 1);
+                    saveExpenses();
+                    displayExpenses();
+                });
+
+                info.append(name, details);
+                item.append(info, price, removeButton);
+                expenseList.appendChild(item);
+            });
+
+            totalAmount.textContent = "₹" + total.toFixed(2);
+            emptyMessage.style.display = expenses.length ? "none" : "block";
+        }
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+
+            const description = descriptionInput.value.trim();
+            const amount = Number(amountInput.value);
+
+            if (!description || !Number.isFinite(amount) || amount <= 0) {
+                alert("Enter a valid description and amount.");
+                return;
+            }
+
+            expenses.push({
+                description,
+                amount,
+                category: categoryInput.value
+            });
+
+            saveExpenses();
+            displayExpenses();
+            form.reset();
+        });
+
+        displayExpenses();
+    </script>
+</body>
+</html>
